@@ -1,15 +1,8 @@
 import mongoose from 'mongoose';
 
-import ApiError from '../utils/ApiError.js';
-
-import ApiResponse from '../utils/ApiResponse.js'
-
 import jwt from 'jsonwebtoken';
 
 import bcrypt from 'bcrypt';
-
-import asyncHandler from '../utils/asyncHandler.js';
-
 
 const userSchema = new mongoose.Schema({
     username : {
@@ -38,6 +31,12 @@ const userSchema = new mongoose.Schema({
     avatar : {
         type : String,
         default : required,
+    },
+
+    isAdmin : {
+        type : Boolean,
+        required : true,
+        default : false,
     }
 
 }, {timestamps : true});
