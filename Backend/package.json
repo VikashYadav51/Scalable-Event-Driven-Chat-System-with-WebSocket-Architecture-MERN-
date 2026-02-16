@@ -1,0 +1,32 @@
+{
+  "name": "chat_application",
+  "version": "1.0.0",
+  "description": "Backend code of Chat Application",
+  "keywords": [
+    "MongoDB",
+    "Node.js",
+    "Exprees.js",
+    "React.js",
+    "Javascript",
+    "JWT",
+    "API",
+    "Cloudinary",
+    "WebSocket",
+    "Socket.io"
+  ],
+  "homepage": "https://github.com/VikashYadav51/Scalable-Event-Driven-Chat-System-with-WebSocket-Architecture-MERN-/tree/main#readme",
+  "bugs": {
+    "url": "https://github.com/VikashYadav51/Scalable-Event-Driven-Chat-System-with-WebSocket-Architecture-MERN-/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VikashYadav51/Scalable-Event-Driven-Chat-System-with-WebSocket-Architecture-MERN-.git#main"
+  },
+  "license": "ISC",
+  "author": "VIKASH YADAV",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "index.js"
+  }
+}
