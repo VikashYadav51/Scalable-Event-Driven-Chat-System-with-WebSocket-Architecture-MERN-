@@ -1,6 +1,6 @@
 import express from 'express';
 import cors from 'cors';
-import cookieParser from 'cookieparser';
+import cookieParser from 'cookie-parser';
 
 const app = express();
 
@@ -30,10 +30,6 @@ app.use((err, req, res, next) =>{
         stack : err.stack,
     });
 })
-
-// Web Socket Server Intergeration.......
-
-
 
 export default app;
 
