@@ -21,6 +21,21 @@ app.use(express.static('public'));
 app.use(cookieParser(process.env.COOKIE_SECREATE));
 
 
+// Routes
+import userRouter from './src/routes/user.router.js';
+import chatRouter from './src/routes/chat.router.js';
+import messageRouter from './src/routes/message.router.js'; 
+
+// User Routes
+app.use('/api/v1/users', userRouter);
+
+// Chat Routes
+app.use('/api/v1/chats', chatRouter);
+
+// Message Routes
+app.use('/api/v1/messages', messageRouter);
+
+
 // Global Error Handler
 app.use((err, req, res, next) =>{
     console.log("Golbal Error Handler ", err);
