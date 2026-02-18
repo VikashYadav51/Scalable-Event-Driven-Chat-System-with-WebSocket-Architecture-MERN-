@@ -19,6 +19,7 @@ const generateAccessAndRefreshTokens = async (userId) => {
     }
 }
 
+
 const registerUser = asyncHandler(async (req, res) => {
     const { username, email, password, fullName } = req.body;
     if ([username, email, password, fullName].some((field) => field?.trim() === "")) {
@@ -61,6 +62,7 @@ const registerUser = asyncHandler(async (req, res) => {
     )
 });
 
+
 const loginUser = asyncHandler(async (req, res) => {
     const { username, email, password } = req.body;
     if (!username && !email) {
@@ -88,6 +90,7 @@ const loginUser = asyncHandler(async (req, res) => {
     )
 });
 
+
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
         req.user?._id,
@@ -105,6 +108,7 @@ const logoutUser = asyncHandler(async (req, res) => {
         new ApiResponse(200, "User logged out successfully")
     )
 });
+
 
 const updatePassword = asyncHandler( async (req, res) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;
@@ -141,7 +145,7 @@ const updatePassword = asyncHandler( async (req, res) => {
 
 const upadateAvatar = asyncHandler( async(req, res) =>{
     const avatarLocalPath = req.file?.path;
-    
+
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required", { avatarLocalPath });
     }
@@ -163,6 +167,7 @@ const upadateAvatar = asyncHandler( async(req, res) =>{
         new ApiResponse(200, "Avatar updated successfully", {})
     )
 });
+
 
 const updateEmailid = asyncHandler( async(req, res) =>{
     const { oldEmailId, newEmailId } = req.body;
@@ -186,6 +191,7 @@ const updateEmailid = asyncHandler( async(req, res) =>{
     )
 });
 
+
 const getProfile = asyncHandler( async(req, res) =>{
     const user = await User.findById(req.user?._id);
     if(!user){
@@ -198,6 +204,7 @@ const getProfile = asyncHandler( async(req, res) =>{
         new ApiResponse(200, "User profile fetched successfully", currentUser)
     )
 });
+
 
 const refreshAccessToken = asyncHandler( async(req, res) =>{
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
@@ -237,6 +244,7 @@ const refreshAccessToken = asyncHandler( async(req, res) =>{
         throw new ApiError(401, error?.message || 'Invalid refresh token');
     }
 });
+
 
 export {
     registerUser,
