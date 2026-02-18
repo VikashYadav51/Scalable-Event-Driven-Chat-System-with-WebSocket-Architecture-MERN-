@@ -9,7 +9,7 @@ cloudinary.config({
 });
 
 
-const uploadFilePath = async(localFilePath) =>{
+const uploadOnCloudinary = async(localFilePath) =>{
     try{
         if(!localFilePath){
             throw new ApiError(400, "File path is required ", localFilePath);
@@ -35,4 +35,4 @@ const uploadFilePath = async(localFilePath) =>{
     }
 } 
 
-export default uploadFilePath;
+export default uploadOnCloudinary;
