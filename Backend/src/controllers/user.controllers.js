@@ -31,6 +31,8 @@ const registerUser = asyncHandler(async (req, res) => {
         throw new ApiError(409, "User with email or username already exists");
     }
 
+    console.log(`req.files avatar ${req.files}`);
+
     const avatarLocalPath = req.files?.avatar[0]?.path;
 
     if (!avatarLocalPath) {
@@ -70,19 +72,25 @@ const loginUser = asyncHandler(async (req, res) => {
     if (!user) {
         throw new ApiError(404, "User does not exist");
     }
+
     const isPasswordValid = await user.isPasswordCorrect(password);
+
     if (!isPasswordValid) {
         throw new ApiError(401, "Invalid user credentials");
     }
+
     const { accessToken, refreshToken } = await generateAccessAndRefreshTokens(user._id);
+    
+    const loggedInUser = await User.findById(user._id).select("-password -refreshToken");
+
     return res.status(200).json(
-        new ApiResponse(200, "User logged in successfully", { user, accessToken, refreshToken })
+        new ApiResponse(200, "User logged in successfully", { loggedInUser, accessToken, refreshToken })
     )
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
     await User.findByIdAndUpdate(
-        req.user._id,
+        req.user?._id,
         {
             $set: {
                 refreshToken: undefined
@@ -92,12 +100,13 @@ const logoutUser = asyncHandler(async (req, res) => {
             new: true
         }
     )
+
     return res.status(200).json(
         new ApiResponse(200, "User logged out successfully")
     )
 });
 
-const updatePassword = asyncHandler(async (req, res) => {
+const updatePassword = asyncHandler( async (req, res) => {
     const { oldPassword, newPassword, confirmPassword } = req.body;
 
     if(!(oldPassword || newPassword )){
@@ -115,6 +124,7 @@ const updatePassword = asyncHandler(async (req, res) => {
     }
 
     const isPasswordValid = await user.isPasswordCorrect(oldPassword);
+
     if(!isPasswordValid){
         throw new ApiError(401, "Invalid old password", { oldPassword, newPassword });
     }
@@ -122,13 +132,6 @@ const updatePassword = asyncHandler(async (req, res) => {
     user.password = newPassword;
 
     const savepassword = await user.save({ validateBeforeSave : false });
-
-    if(!savepassword){
-        throw new ApiError(500, "Something went wrong while updating the password", { oldPassword, newPassword });
-    }
-
-    console.log("savePassword ", savepassword);
-
 
     return res.status(200).json(
         new ApiResponse(200, "Password updated successfully", {})
@@ -138,6 +141,7 @@ const updatePassword = asyncHandler(async (req, res) => {
 
 const upadateAvatar = asyncHandler( async(req, res) =>{
     const avatarLocalPath = req.file?.path;
+    
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required", { avatarLocalPath });
     }
