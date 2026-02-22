@@ -13,7 +13,7 @@ const coreOptions = {
 }
 
 
-// CORS Settings
+// data middlewares 
 app.use(cors(coreOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended : true, limit : '200kb'}));
