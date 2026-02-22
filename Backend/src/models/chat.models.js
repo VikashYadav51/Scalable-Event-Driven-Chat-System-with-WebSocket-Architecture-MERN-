@@ -4,7 +4,6 @@ const chatSchema = new mongoose.model(
     {
         chatName : {
             type : String,
-            // required : true,
             default : 'Chat',
             trim : true,
         },

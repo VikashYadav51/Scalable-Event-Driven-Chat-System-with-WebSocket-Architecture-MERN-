@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 const userSchema = new mongoose.Schema({
-    username : {
+    userName : {
         type : String,
         required : true,
         unique : true,
@@ -44,7 +44,7 @@ const userSchema = new mongoose.Schema({
 userSchema.pre('save', async function() {
     if(this.isModified(this.password)){
         const hasingPassword = await bcrypt.hash(this.password, 15);
-        console.log(`hasing password is  ${hasingPassword}`);
+        // console.log(`hasing password is  ${hasingPassword}`);
         next();
         return ;
     }
@@ -73,8 +73,7 @@ userSchema.methods.accessToken = async ()=>{
         {expiresIn : process.env.ACCESS_TOKEN_EXPIRE_TIME}
     );
 
-    console.log(`access token is ${accessToken}`);
-
+    // console.log(`access token is ${accessToken}`);
     return accessToken;
 }
 
@@ -93,8 +92,7 @@ userSchema.methods.refreshToken = async ()=>{
         {expiresIn : process.env.REFRESH_TOKEN_EXPIRE_TIME}
     );
 
-    console.log(`access token is ${refreshToken}`);
-
+    // console.log(`access token is ${refreshToken}`);
     return refreshToken;
 }
 

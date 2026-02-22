@@ -10,23 +10,25 @@ const messageSchema = new mongoose.model(
 
         conversation: {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "Conversation",
+            ref: "Chat",
             required: true,
         },
 
         content : {
             type : String,
             trim : true,
+            default : "",
         },
 
         messageType: {
             type: String,
-            enum: ["text", "image", "video", "file"],
+            enum: ["text", "image", "video", "file", "audio", "sticker"],
             default: "text",
         },
 
         fileUrl: {
             type: String,
+            default : "",
         },
 
         readBy: [
@@ -45,7 +47,7 @@ const messageSchema = new mongoose.model(
     {timestamps : true}
 );
 
-messageSchema.index({ conversation: 1, createdAt: 1 });
+messageSchema.index({ conversation: 1 });
 
 
 export const Message = mongoose.model('Message', messageSchema);
