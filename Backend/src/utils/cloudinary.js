@@ -13,7 +13,6 @@ const uploadOnCloudinary = async(localFilePath) =>{
     try{
         if(!localFilePath){
             throw new ApiError(400, "File path is required ", localFilePath);
-            // return null;
         }
 
         const upload = await cloudinary.v2.uploader.upload( localFilePath, {
@@ -25,7 +24,7 @@ const uploadOnCloudinary = async(localFilePath) =>{
         return upload;
     }
 
-    catch{
+    catch(error){
         if (localFilePath && fs.existsSync(localFilePath)) {
             fs.unlinkSync(localFilePath);
         }
