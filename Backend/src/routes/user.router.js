@@ -22,8 +22,6 @@ const userRouter = express.Router();
 userRouter.post(
   '/register',
   upload.fields([
-    { name: 'profilePicture', maxCount: 1 },
-    { name: 'coverImage', maxCount: 1 },
     { name: 'avatar', maxCount: 1 },
   ]),
   registerUser  
