@@ -5,7 +5,16 @@ import { Message } from "../models/message.models.js";
 
 const getAllMessage = asyncHandler(async (req, res) => {
     const { chatId } = req.params;
-    const messages = await Message.find({ chat: chatId }).populate("Sender", "name pic email").populate("chat");
+    const messages = await Message.find({ chat: chatId })
+    .populate("Sender", "name pic email")
+    .populate("chat");
+
+    const message = await Message.findById(messageId);
+    if (!message) {
+        throw new ApiError(404, "Message not found");
+    }
+
+
     if (!messages) {
         throw new ApiError(404, "Messages not found");
     }
@@ -96,10 +105,8 @@ const updateMessage = asyncHandler(async (req, res) => {
 
     res.status(200).json(
         new ApiResponse(200, "Message updated successfully", message)
-    );
+    );   
 });
-
-
 
 export {
     getAllMessage,

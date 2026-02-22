@@ -21,13 +21,16 @@ const generateAccessAndRefreshTokens = async (userId) => {
 
 
 const registerUser = asyncHandler(async (req, res) => {
-    const { username, email, password, fullName } = req.body;
-    if ([username, email, password, fullName].some((field) => field?.trim() === "")) {
+    const { userName, email, password, fullName } = req.body;
+
+    if ([userName, email, password, fullName].some((field) => field?.trim() === "")) {
         throw new ApiError(400, "All fields are required");
     }
+
     const existingUser = await User.findOne({
-        $or: [{ username }, { email }]
+        $or: [{ userName }, { email }]
     });
+
     if (existingUser) {
         throw new ApiError(409, "User with email or username already exists");
     }
@@ -46,7 +49,7 @@ const registerUser = asyncHandler(async (req, res) => {
     }
 
     const user = await User.create({
-        username: username.toLowerCase(),
+        userName: userName.toLowerCase(),
         email,
         password,
         fullName,
@@ -64,13 +67,16 @@ const registerUser = asyncHandler(async (req, res) => {
 
 
 const loginUser = asyncHandler(async (req, res) => {
-    const { username, email, password } = req.body;
-    if (!username && !email) {
+    const { userName, email, password } = req.body;
+
+    if (!userName || !email) {
         throw new ApiError(400, "Username or email is required");
     }
+
     const user = await User.findOne({
-        $or: [{ username }, { email }]
+        $or: [{ userName }, { email }]  
     });
+
     if (!user) {
         throw new ApiError(404, "User does not exist");
     }
@@ -118,7 +124,7 @@ const updatePassword = asyncHandler( async (req, res) => {
     }
 
     if(newPassword !== confirmPassword){
-        throw new ApiError(400, "New password and confirm password do not match", { newPassword, confirmPassword });
+        throw new ApiError(400, "New password and confirm password do not match", { newPassword });
     }
 
     const user = await User.findById(req.user?._id);
@@ -138,13 +144,15 @@ const updatePassword = asyncHandler( async (req, res) => {
     const savepassword = await user.save({ validateBeforeSave : false });
 
     return res.status(200).json(
-        new ApiResponse(200, "Password updated successfully", {})
+        new ApiResponse(200, "Password updated successfully", { nullptr })
     )
 });
 
 
 const upadateAvatar = asyncHandler( async(req, res) =>{
-    const avatarLocalPath = req.file?.path;
+    console.log(`req.files avatar ${req.files}`);
+
+    const avatarLocalPath = req.files?.avatar[0]?.path;
 
     if(!avatarLocalPath){
         throw new ApiError(400, "Avatar is required", { avatarLocalPath });
@@ -193,15 +201,13 @@ const updateEmailid = asyncHandler( async(req, res) =>{
 
 
 const getProfile = asyncHandler( async(req, res) =>{
-    const user = await User.findById(req.user?._id);
+    const user = await User.findById(req.user?._id).select("-password -refreshToken");
     if(!user){
         throw new ApiError(404, "User not found");
     }
 
-    const currentUser = await User.findById(req.user?._id).select("-password -refreshToken");
-
     return res.status(200).json(
-        new ApiResponse(200, "User profile fetched successfully", currentUser)
+        new ApiResponse(200, "User profile fetched successfully", user)
     )
 });
 
@@ -225,7 +231,7 @@ const refreshAccessToken = asyncHandler( async(req, res) =>{
             throw new ApiError(401, 'Refresh token is expired or used')
         }
 
-        const { accessToken, refreshToken: newRefreshToken } =  await generateAccessAndRefreshTokens(user._id);
+        const { accessToken, newRefreshToken } =  await generateAccessAndRefreshTokens(user._id);
 
         const cookieOption = {
             httpOnly : true,
